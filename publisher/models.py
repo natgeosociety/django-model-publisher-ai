@@ -31,7 +31,7 @@ class PublisherModelBase(models.Model):
         default=timezone.now,
         editable=False)
 
-    publisher_published_at = models.DateTimeField(null=True, editable=False)
+    publisher_published_at = models.DateTimeField(blank=True, null=True)
 
     publisher_fields = (
         'publisher_linked',
