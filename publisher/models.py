@@ -96,7 +96,8 @@ class PublisherModelBase(models.Model):
 
         # Set the published date if this is the first time the page has been published
         if not draft_obj.publisher_linked:
-            draft_obj.publisher_published_at = timezone.now()
+            if draft_obj.publisher_published_at is None:
+                draft_obj.publisher_published_at = timezone.now()
 
         if draft_obj.publisher_linked:
             # Duplicate placeholder patch to prevent plugins from being deleted
