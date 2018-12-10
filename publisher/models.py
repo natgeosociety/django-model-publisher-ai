@@ -251,7 +251,7 @@ class PublisherModelBase(models.Model):
         if obj is None:
             obj = self
 
-        model_fields = obj.__class__._meta.get_all_field_names()
+        model_fields = [f.name for f in obj.__class__._meta.get_fields()]
         for field in model_fields:
             if field in self.publisher_ignore_fields:
                 continue
