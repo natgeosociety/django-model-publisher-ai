@@ -74,7 +74,7 @@ class PublisherModelBase(models.Model):
 
         # Get all placeholders + their plugins to find their modified date
         for placeholder_field in self.get_placeholder_fields():
-            placeholder = getattr(self, placeholder_field)
+            placeholder = getattr(self, placeholder_field.name)
             for plugin in placeholder.get_plugins_list():
                 if plugin.changed_date > self.publisher_linked.publisher_modified_at:
                     return True
@@ -147,8 +147,8 @@ class PublisherModelBase(models.Model):
         published_obj = draft_obj.publisher_linked
 
         for field in self.get_placeholder_fields(draft_obj):
-            draft_placeholder = getattr(draft_obj, field)
-            published_placeholder = getattr(published_obj, field)
+            draft_placeholder = getattr(draft_obj, field.name)
+            published_placeholder = getattr(published_obj, field.name)
 
             if draft_placeholder.pk == published_placeholder.pk:
                 published_placeholder.pk = None
@@ -201,7 +201,8 @@ class PublisherModelBase(models.Model):
     def get_field(self, field_name):
         # return the actual field (not the db representation of the field)
         try:
-            return self._meta.get_field_by_name(field_name)[0]
+            # return self._meta.get_field_by_name(field_name)[0]
+            return self._meta.get_field(field_name)
         except models.fields.FieldDoesNotExist:
             return None
 
@@ -220,13 +221,13 @@ class PublisherModelBase(models.Model):
             return
 
         for field in self.get_placeholder_fields(src_obj):
-            src_placeholder = getattr(src_obj, field)
-            dst_placeholder = getattr(dst_obj, field)
+            src_placeholder = getattr(src_obj, field.name)
+            dst_placeholder = getattr(dst_obj, field.name)
 
             dst_placeholder.pk = None
             dst_placeholder.save()
 
-            setattr(dst_obj, field, dst_placeholder)
+            setattr(dst_obj, field.name, dst_placeholder)
             dst_obj.save()
 
             src_plugins = src_placeholder.get_plugins_list()
@@ -251,13 +252,14 @@ class PublisherModelBase(models.Model):
         if obj is None:
             obj = self
 
-        model_fields = [f.name for f in obj.__class__._meta.get_fields()]
+        model_fields = obj.__class__._meta.get_fields()
+
         for field in model_fields:
             if field in self.publisher_ignore_fields:
                 continue
 
             try:
-                placeholder = getattr(obj, field)
+                placeholder = getattr(obj, field.name)
                 if isinstance(placeholder, Placeholder):
                     placeholder_fields.append(field)
             except (ObjectDoesNotExist, AttributeError):

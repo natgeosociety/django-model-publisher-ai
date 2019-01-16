@@ -131,9 +131,12 @@ class PublisherAdmin(ModelAdmin):
             publish_btn = reverse(self.publish_reverse, args=(obj.pk, ))
 
         t = loader.get_template(template_name)
-        c = Context({
+        # c = Context({
+        #     'publish_btn': publish_btn,
+        # })
+        c = {
             'publish_btn': publish_btn,
-        })
+        }
         return t.render(c)
     publisher_status.short_description = 'Last Changes'
     publisher_status.allow_tags = True
@@ -146,13 +149,20 @@ class PublisherAdmin(ModelAdmin):
             is_published = True
 
         t = loader.get_template(template_name)
-        c = Context({
+        # c = Context({
+        #     'object': obj,
+        #     'is_published': is_published,
+        #     'has_publish_permission': self.has_publish_permission(self.request, obj),
+        #     'publish_url': reverse(self.publish_reverse, args=(obj.pk, )),
+        #     'unpublish_url': reverse(self.unpublish_reverse, args=(obj.pk, )),
+        # })
+        c = {
             'object': obj,
             'is_published': is_published,
             'has_publish_permission': self.has_publish_permission(self.request, obj),
             'publish_url': reverse(self.publish_reverse, args=(obj.pk, )),
             'unpublish_url': reverse(self.unpublish_reverse, args=(obj.pk, )),
-        })
+        }
         return t.render(c)
     publisher_publish.short_description = 'Published'
     publisher_publish.allow_tags = True
