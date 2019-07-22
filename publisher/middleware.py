@@ -1,3 +1,4 @@
+import pdb
 from threading import current_thread
 try:
     from django.utils.deprecation import MiddlewareMixin
@@ -19,8 +20,7 @@ class PublisherMiddleware(MiddlewareMixin):
     def process_request(self, request):
         PublisherMiddleware._draft_status[current_thread()] = self.is_draft(request)
 
-    @staticmethod
-    def process_response(request, response):
+    def process_response(self, request, response):
         try:
             del PublisherMiddleware._draft_status[current_thread()]
         except KeyError:
