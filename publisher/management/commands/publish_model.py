@@ -39,12 +39,12 @@ class Command(BaseCommand):
 
         if show_list:
             for model in qs.all():
-                print("%s doesn't have published version yet" % model)
+                print(("%s doesn't have published version yet" % model))
             return
 
         for model in qs.all():
             model.publish()
-            print('Successfully published %s' % model)
+            print(('Successfully published %s' % model))
 
     def get_model(self, model_name):
         """

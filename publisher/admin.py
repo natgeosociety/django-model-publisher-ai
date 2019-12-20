@@ -117,7 +117,7 @@ class PublisherAdmin(ModelAdmin):
         return request.user.has_perm('%s.can_publish' % opts.app_label)
 
     def publisher_object_title(self, obj):
-        return u'%s' % obj
+        return '%s' % obj
     publisher_object_title.short_description = 'Title'
 
     def publisher_status(self, obj):
